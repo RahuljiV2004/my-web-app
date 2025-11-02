@@ -1,0 +1,137 @@
+pipeline {
+    agent any
+    
+    environment {
+        PROJECT_ID = 'emerald-state-472315-d7'
+        CLUSTER_ZONE = 'us-central1-a'
+        REGISTRY_HOSTNAME = 'us-central1-docker.pkg.dev'
+        REPOSITORY = 'docker-repo'
+        IMAGE_NAME = 'my-web-app'
+        IMAGE_TAG = "${BUILD_NUMBER}"
+        GCP_CREDENTIALS = credentials('gcp-service-account')
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Checking out code from GitHub...'
+                checkout scm
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                echo 'Building application...'
+                sh '''
+                    if [ -f package.json ]; then
+                        npm install
+                    fi
+                '''
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+                sh '''
+                    if [ -f package.json ]; then
+                        npm test
+                    fi
+                '''
+            }
+        }
+        
+        stage('Code Quality Analysis') {
+            steps {
+                echo 'Running code quality checks...'
+                sh '''
+                    echo "SonarQube analysis would run here"
+                    # Add SonarQube scanner if configured
+                '''
+            }
+        }
+        
+        stage('Build Docker Image') {
+            steps {
+                echo 'Building Docker image...'
+                sh """
+                    docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+                    docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${REGISTRY_HOSTNAME}/${PROJECT_ID}/${REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}
+                    docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${REGISTRY_HOSTNAME}/${PROJECT_ID}/${REPOSITORY}/${IMAGE_NAME}:latest
+                """
+            }
+        }
+        
+        stage('Push to Artifact Registry') {
+            steps {
+                echo 'Pushing Docker image to GCP Artifact Registry...'
+                sh """
+                    gcloud auth activate-service-account --key-file=${GCP_CREDENTIALS}
+                    gcloud auth configure-docker ${REGISTRY_HOSTNAME}
+                    docker push ${REGISTRY_HOSTNAME}/${PROJECT_ID}/${REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}
+                    docker push ${REGISTRY_HOSTNAME}/${PROJECT_ID}/${REPOSITORY}/${IMAGE_NAME}:latest
+                """
+            }
+        }
+        
+        stage('Deploy to Cloud Run') {
+            steps {
+                echo 'Deploying to GCP Cloud Run...'
+                sh """
+                    gcloud auth activate-service-account --key-file=${GCP_CREDENTIALS}
+                    gcloud config set project ${PROJECT_ID}
+                    
+                    gcloud run deploy my-web-app \
+                        --image=${REGISTRY_HOSTNAME}/${PROJECT_ID}/${REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG} \
+                        --platform=managed \
+                        --region=us-central1 \
+                        --allow-unauthenticated \
+                        --port=8080
+                """
+            }
+        }
+        
+        stage('Verify Deployment') {
+            steps {
+                echo 'Verifying deployment...'
+                sh """
+                    gcloud auth activate-service-account --key-file=${GCP_CREDENTIALS}
+                    SERVICE_URL=\$(gcloud run services describe my-web-app --region=us-central1 --format='value(status.url)')
+                    echo "Application deployed at: \$SERVICE_URL"
+                    curl -f \$SERVICE_URL/health || exit 1
+                """
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+            emailext(
+                subject: "Jenkins Build Success: ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}",
+                body: """
+                    Pipeline: ${env.JOB_NAME}
+                    Build Number: ${env.BUILD_NUMBER}
+                    Status: SUCCESS
+                    
+                    Check console output at: ${env.BUILD_URL}
+                """,
+                to: 'your-email@example.com'
+            )
+        }
+        failure {
+            echo 'Pipeline failed!'
+            emailext(
+                subject: "Jenkins Build Failed: ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}",
+                body: """
+                    Pipeline: ${env.JOB_NAME}
+                    Build Number: ${env.BUILD_NUMBER}
+                    Status: FAILURE
+                    
+                    Check console output at: ${env.BUILD_URL}
+                """,
+                to: 'your-email@example.com'
+            )
+        }
+    }
+}
