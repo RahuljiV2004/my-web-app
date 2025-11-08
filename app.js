@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 8080;
-//gopi1
+
 app.get('/', (req, res) => {
     res.send(`
 <!DOCTYPE html>
@@ -9,9 +9,9 @@ app.get('/', (req, res) => {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SNUC Web Portal</title>
+  <title>SNUC Pro Portal</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
     * {
       margin: 0;
@@ -20,101 +20,95 @@ app.get('/', (req, res) => {
     }
 
     body {
-      font-family: 'Poppins', sans-serif;
-      background: radial-gradient(circle at top left, #2b1055, #7597de);
-      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      background: #0d0d0d;
+      color: #eaeaea;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #fff;
+      min-height: 100vh;
       overflow: hidden;
       position: relative;
     }
 
-    /* Neon Orb Backgrounds */
-    .orb {
+    /* Soft gradient glow background */
+    .glow {
       position: absolute;
-      width: 300px;
-      height: 300px;
+      width: 600px;
+      height: 600px;
       border-radius: 50%;
-      filter: blur(150px);
-      animation: float 10s ease-in-out infinite;
-      opacity: 0.7;
+      background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+      filter: blur(80px);
+      top: -100px;
+      left: -150px;
+      animation: float 10s ease-in-out infinite alternate;
     }
 
-    .orb1 {
-      top: -50px;
-      left: -50px;
-      background: #ff6bcb;
-      animation-delay: 0s;
-    }
-
-    .orb2 {
-      bottom: -50px;
-      right: -50px;
-      background: #47e7b1;
-      animation-delay: 2s;
+    .glow2 {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.07) 0%, transparent 70%);
+      filter: blur(100px);
+      bottom: -120px;
+      right: -100px;
+      animation: float 12s ease-in-out infinite alternate-reverse;
     }
 
     @keyframes float {
-      0%, 100% { transform: translate(0, 0); }
-      50% { transform: translate(30px, -30px); }
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(40px, -40px); }
     }
 
-    .glass-card {
+    .container {
       position: relative;
       z-index: 2;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 30px;
-      padding: 3.5rem;
-      text-align: center;
-      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(15px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      transition: all 0.4s ease;
-      max-width: 850px;
       width: 90%;
+      max-width: 850px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 3rem;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 40px rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
     }
 
-    .glass-card:hover {
-      transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+    .container:hover {
+      box-shadow: 0 0 60px rgba(255, 255, 255, 0.1);
+      transform: translateY(-3px);
     }
 
     h1 {
-      font-size: 3.5rem;
-      background: linear-gradient(90deg, #00f5ff, #ff00c3, #ff8c00);
-      background-size: 300%;
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #ffffff, #aaaaaa);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: gradientShift 5s infinite linear;
-      font-weight: 700;
-      letter-spacing: -1px;
-    }
-
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+      text-align: center;
+      margin-bottom: 1rem;
+      letter-spacing: -0.5px;
     }
 
     .subtitle {
-      font-size: 1.2rem;
-      color: rgba(255, 255, 255, 0.8);
-      margin-top: 1rem;
+      text-align: center;
+      color: #bbb;
+      font-size: 1.15rem;
+      margin-bottom: 2.5rem;
       line-height: 1.6;
     }
 
     .location {
-      display: inline-flex;
-      align-items: center;
-      background: rgba(255, 255, 255, 0.15);
-      padding: 0.75rem 1.5rem;
+      text-align: center;
+      background: rgba(255,255,255,0.05);
       border-radius: 50px;
-      font-weight: 600;
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      font-weight: 500;
       letter-spacing: 0.5px;
-      backdrop-filter: blur(5px);
       margin-bottom: 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .location::before {
@@ -122,122 +116,117 @@ app.get('/', (req, res) => {
       margin-right: 0.5rem;
     }
 
-    .cta-button {
-      display: inline-block;
-      background: linear-gradient(135deg, #00f5ff, #ff00c3);
-      color: #fff;
-      padding: 1rem 2.5rem;
-      border-radius: 50px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.3s ease;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-      margin-top: 2rem;
-    }
-
-    .cta-button:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-      filter: brightness(1.2);
-    }
-
     .stats {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 3rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 1.5rem;
+      margin-top: 2.5rem;
     }
 
     .stat-card {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 1.5rem 2rem;
-      border-radius: 20px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 1.5rem;
       text-align: center;
-      min-width: 150px;
       transition: all 0.3s ease;
-      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     .stat-card:hover {
-      transform: translateY(-5px);
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255,255,255,0.07);
+      transform: translateY(-4px);
     }
 
     .stat-value {
-      font-size: 2.2rem;
+      font-size: 2rem;
       font-weight: 700;
       color: #fff;
     }
 
     .stat-label {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      color: #888;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.75);
-      letter-spacing: 1px;
       margin-top: 0.4rem;
     }
 
+    .cta-button {
+      display: inline-block;
+      margin: 2rem auto 0;
+      background: linear-gradient(135deg, #fff, #c0c0c0);
+      color: #000;
+      padding: 1rem 2.5rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .cta-button:hover {
+      background: #fff;
+      transform: translateY(-3px);
+      box-shadow: 0 0 25px rgba(255,255,255,0.1);
+    }
+
     .footer {
+      text-align: center;
       margin-top: 2.5rem;
-      font-size: 1rem;
-      color: rgba(255, 255, 255, 0.8);
-    }
-
-    .footer .heart {
-      color: #ff6b6b;
-      animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.2); }
+      color: #777;
+      font-size: 0.95rem;
     }
 
     .signature {
-      margin-top: 1rem;
+      display: block;
+      margin-top: 0.75rem;
       font-weight: 700;
-      font-size: 1.1rem;
-      background: linear-gradient(90deg, #ff00c3, #00f5ff);
+      background: linear-gradient(90deg, #ffffff, #888888);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: gradientShift 5s infinite linear;
+      letter-spacing: 0.5px;
+      font-size: 1.05rem;
     }
 
     @media (max-width: 768px) {
-      h1 { font-size: 2.5rem; }
-      .glass-card { padding: 2rem; }
+      h1 { font-size: 2.3rem; }
+      .container { padding: 2rem; }
+      .stats { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <div class="orb orb1"></div>
-  <div class="orb orb2"></div>
-  
-  <div class="glass-card">
+  <div class="glow"></div>
+  <div class="glow2"></div>
+
+  <div class="container">
     <div class="location">Chennai, India</div>
-    <h1>Hello from SNUC!</h1>
-    <p class="subtitle">Welcome to the ultimate Chennai web portal — where performance, elegance, and innovation converge under the guidance of the <strong>Master of Masters</strong>.</p>
-    
-    <a href="/health" class="cta-button">⚡ System Health</a>
+    <h1>Welcome to the SNUC Pro Portal</h1>
+    <p class="subtitle">A refined digital space crafted for precision, strategy, and mastery.  
+      Stay ahead — every millisecond matters in the art of trading.</p>
+
+    <div style="text-align:center;">
+      <a href="/health" class="cta-button">Check System Health</a>
+    </div>
 
     <div class="stats">
       <div class="stat-card">
-        <div class="stat-value">100%</div>
-        <div class="stat-label">Divine Uptime</div>
+        <div class="stat-value">99.99%</div>
+        <div class="stat-label">Uptime</div>
       </div>
       <div class="stat-card">
-        <div class="stat-value">&lt;1ms</div>
-        <div class="stat-label">Response Time</div>
+        <div class="stat-value">&lt;40ms</div>
+        <div class="stat-label">Latency</div>
       </div>
       <div class="stat-card">
-        <div class="stat-value">∞</div>
-        <div class="stat-label">Greatness Level</div>
+        <div class="stat-value">24/7</div>
+        <div class="stat-label">Live Access</div>
       </div>
     </div>
 
     <div class="footer">
-      Made with <span class="heart">❤️</span> by <span class="signature">Raghav G — Master of Masters, SNUC God</span>
+      “Discipline outlasts luck. Precision beats emotion.”  
+      <span class="signature">— Shajan S, SNUC Pro Trader</span>
     </div>
   </div>
 </body>
@@ -246,14 +235,14 @@ app.get('/', (req, res) => {
 });
 
 app.get('/health', (req, res) => {
-    res.status(200).json({ 
-        status: 'healthy', 
-        timestamp: new Date(),
-        uptime: process.uptime(),
-        environment: process.env.NODE_ENV || 'development'
-    });
+  res.status(200).json({
+    status: 'healthy',
+    timestamp: new Date(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || 'development'
+  });
 });
 
 app.listen(PORT, () => {
-    console.log(`⚙️ Server running on port ${PORT}`);
+  console.log(\`🖤 SNUC Pro Portal running elegantly on port \${PORT}\`);
 });
