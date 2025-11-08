@@ -7,208 +7,239 @@ app.get('/', (req, res) => {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chennai Web App</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SNUC Web Portal</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            overflow-x: hidden;
-        }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        .container {
-            max-width: 900px;
-            padding: 3rem;
-            position: relative;
-        }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle at top left, #2b1055, #7597de);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      overflow: hidden;
+      position: relative;
+    }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            padding: 4rem 3rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            position: relative;
-            overflow: hidden;
-        }
+    /* Neon Orb Backgrounds */
+    .orb {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      filter: blur(150px);
+      animation: float 10s ease-in-out infinite;
+      opacity: 0.7;
+    }
 
-        .glass-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-        }
+    .orb1 {
+      top: -50px;
+      left: -50px;
+      background: #ff6bcb;
+      animation-delay: 0s;
+    }
 
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
+    .orb2 {
+      bottom: -50px;
+      right: -50px;
+      background: #47e7b1;
+      animation-delay: 2s;
+    }
 
-        .content {
-            position: relative;
-            z-index: 1;
-        }
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(30px, -30px); }
+    }
 
-        h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            background: linear-gradient(to right, #fff, #e0e7ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.02em;
-        }
+    .glass-card {
+      position: relative;
+      z-index: 2;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 30px;
+      padding: 3.5rem;
+      text-align: center;
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.4s ease;
+      max-width: 850px;
+      width: 90%;
+    }
 
-        .subtitle {
-            font-size: 1.25rem;
-            margin-bottom: 2.5rem;
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: 400;
-            line-height: 1.6;
-        }
+    .glass-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+    }
 
-        .location {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(255, 255, 255, 0.15);
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            margin-bottom: 2rem;
-            font-weight: 500;
-            backdrop-filter: blur(5px);
-        }
+    h1 {
+      font-size: 3.5rem;
+      background: linear-gradient(90deg, #00f5ff, #ff00c3, #ff8c00);
+      background-size: 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientShift 5s infinite linear;
+      font-weight: 700;
+      letter-spacing: -1px;
+    }
 
-        .location::before {
-            content: '📍';
-            font-size: 1.2rem;
-        }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1.5rem;
-            margin-top: 3rem;
-        }
+    .subtitle {
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.8);
+      margin-top: 1rem;
+      line-height: 1.6;
+    }
 
-        .stat-card {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 1.5rem;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-        }
+    .location {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 0.75rem 1.5rem;
+      border-radius: 50px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      backdrop-filter: blur(5px);
+      margin-bottom: 2rem;
+    }
 
-        .stat-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.15);
-        }
+    .location::before {
+      content: '📍';
+      margin-right: 0.5rem;
+    }
 
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
+    .cta-button {
+      display: inline-block;
+      background: linear-gradient(135deg, #00f5ff, #ff00c3);
+      color: #fff;
+      padding: 1rem 2.5rem;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+      margin-top: 2rem;
+    }
 
-        .stat-label {
-            font-size: 0.875rem;
-            color: rgba(255, 255, 255, 0.7);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
+    .cta-button:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      filter: brightness(1.2);
+    }
 
-        .footer {
-            margin-top: 3rem;
-            text-align: center;
-            font-size: 0.95rem;
-            color: rgba(255, 255, 255, 0.7);
-        }
+    .stats {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 3rem;
+      gap: 1.5rem;
+    }
 
-        .footer .heart {
-            color: #ff6b6b;
-            animation: pulse 1.5s ease-in-out infinite;
-        }
+    .stat-card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1.5rem 2rem;
+      border-radius: 20px;
+      text-align: center;
+      min-width: 150px;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
+    .stat-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.2);
+    }
 
-        .cta-button {
-            display: inline-block;
-            background: #fff;
-            color: #667eea;
-            padding: 1rem 2.5rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            margin-top: 1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
+    .stat-value {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #fff;
+    }
 
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-        }
+    .stat-label {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.75);
+      letter-spacing: 1px;
+      margin-top: 0.4rem;
+    }
 
-        @media (max-width: 768px) {
-            h1 { font-size: 2.5rem; }
-            .container { padding: 2rem; }
-            .glass-card { padding: 2.5rem 1.5rem; }
-            .stats { grid-template-columns: 1fr; }
-        }
-    </style>
+    .footer {
+      margin-top: 2.5rem;
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .footer .heart {
+      color: #ff6b6b;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    .signature {
+      margin-top: 1rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+      background: linear-gradient(90deg, #ff00c3, #00f5ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientShift 5s infinite linear;
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      .glass-card { padding: 2rem; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="glass-card">
-            <div class="content">
-                <div class="location">Chennai, India</div>
-                <h1>Hello from Chennai!</h1>
-                <p class="subtitle">Welcome to our cutting-edge web application. Experience the perfect blend of performance and elegance.</p>
-                
-                <a href="/health" class="cta-button">Check System Health</a>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  
+  <div class="glass-card">
+    <div class="location">Chennai, India</div>
+    <h1>Hello from SNUC!</h1>
+    <p class="subtitle">Welcome to the ultimate Chennai web portal — where performance, elegance, and innovation converge under the guidance of the <strong>Master of Masters</strong>.</p>
+    
+    <a href="/health" class="cta-button">⚡ System Health</a>
 
-                <div class="stats">
-                    <div class="stat-card">
-                        <div class="stat-value">99.9%</div>
-                        <div class="stat-label">Uptime</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">&lt;50ms</div>
-                        <div class="stat-label">Response Time</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">24/7</div>
-                        <div class="stat-label">Available</div>
-                    </div>
-                </div>
-
-                <div class="footer">
-                    Made with <span class="heart">❤️</span> by Rahulji
-                </div>
-            </div>
-        </div>
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-value">100%</div>
+        <div class="stat-label">Divine Uptime</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">&lt;1ms</div>
+        <div class="stat-label">Response Time</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">∞</div>
+        <div class="stat-label">Greatness Level</div>
+      </div>
     </div>
+
+    <div class="footer">
+      Made with <span class="heart">❤️</span> by <span class="signature">Raghav G — Master of Masters, SNUC God</span>
+    </div>
+  </div>
 </body>
 </html>
     `);
@@ -224,7 +255,5 @@ app.get('/health', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`⚙️ Server running on port ${PORT}`);
 });
-
-//test change 1 working fine
