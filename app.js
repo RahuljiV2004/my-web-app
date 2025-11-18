@@ -226,7 +226,7 @@ app.get('/', (req, res) => {
 
     <div class="footer">
       “Discipline outlasts luck. Precision beats emotion.”  
-      <span class="signature">— Shajan S, SNUC Pro Trader</span>
+      <span class="signature">— Rahulji V</span>
     </div>
   </div>
 </body>
@@ -244,5 +244,5 @@ app.get('/health', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(\`🖤 SNUC Pro Portal running elegantly on port \${PORT}\`);
+  console.log(\`SNUC Pro Portal running elegantly on port \${PORT}\`);
 });
